@@ -3,19 +3,22 @@
 const express = require('express');
 const service = express();  
 const ServiceRegistry = require('./serviceRegistry');
-const serviceRegistry = new ServiceRegistry();
 
-service.set('serviceRegistry', serviceRegistry);
+module.exports = (config) => {
+    const serviceRegistry = new ServiceRegistry(config.serviceTimeout, config.log());
 
-service.put('/service/:intent/:port', (req, res, next) => {
-    const serviceIntent = req.params.intent;
-    const servicePort = req.params.port;
+    service.set('serviceRegistry', serviceRegistry);
 
-    const serviceIp = req.connection.remoteAddress.includes('::')
-    ? `[${req.connection.remoteAddress}]` : req.connection.remoteAddress;
+    service.put('/service/:intent/:port', (req, res) => {
+        const serviceIntent = req.params.intent;
+        const servicePort = req.params.port;
 
-    serviceRegistry.add(serviceIntent, serviceIp, servicePort);
-    res.json({result: `${serviceIntent} at ${serviceIp}:${servicePort}`});
-});
+        const serviceIp = req.connection.remoteAddress.includes('::')
+        ? `[${req.connection.remoteAddress}]` : req.connection.remoteAddress;
 
-module.exports = service;
+        serviceRegistry.add(serviceIntent, serviceIp, servicePort);
+        res.json({result: `${serviceIntent} at ${serviceIp}:${servicePort}`});
+    });
+
+    return service;
+};
