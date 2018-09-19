@@ -47,12 +47,13 @@ describe('ServiceRegistry', () => {
     });
 
     describe('cleanup', () => {
-        it('should remove expired services from the registry', () => {
+        it('should remove expired services from the registry', (done) => {
             const serviceRegistry = new ServiceRegistry(30, log)
             serviceRegistry.add('test', '127.0.0.1', 9999);
             serviceRegistry.remove('test', '127.0.0.1', 9999);
             const testIntent = serviceRegistry.get('test');
             should.not.exist(testIntent);
+            done();
         });
     })
 });
