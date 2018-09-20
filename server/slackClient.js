@@ -8,7 +8,7 @@ class SlackClient {
     constructor (token, logLevel, nlp, registry, log) {
         this._rtm = new RTMClient(token);
         this._nlp = nlp;
-        this.registry = registry;
+        this._registry = registry;
         this._log = log;
 
         this._addAuthenticatedHandler(this._handleOnAuthenticated);
@@ -22,13 +22,6 @@ class SlackClient {
     _addAuthenticatedHandler(handler) {
         this._rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, handler.bind(this));
     }
-
-    /*
-
-    _addAuthenticatedHandler(handler) {
-        this._rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, handler.bind(this));
-    }
-    */
 
     _handleOnMessage(message) {
 
@@ -53,7 +46,7 @@ class SlackClient {
                         }
                         
                         return this._rtm.sendMessage(response, message.channel);
-                    })
+                    });
     
                 } catch(err) {
                     this._log.error(err);
