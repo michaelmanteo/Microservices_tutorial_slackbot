@@ -1,14 +1,14 @@
 'use strict';
 
-const RtmClient = require('@slack/client').RtmClient;
+const RTMClient= require('@slack/client').RtmClient;
 const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 const RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 
 class SlackClient {
     constructor (token, logLevel, nlp, registry, log) {
-        this._rtm = new RtmClient(token, {logLevel});
+        this._rtm = new RTMClient(token);
         this._nlp = nlp;
-        this.registry = registry;
+        this._registry = registry;
         this._log = log;
 
         this._addAuthenticatedHandler(this._handleOnAuthenticated);
@@ -46,7 +46,7 @@ class SlackClient {
                         }
                         
                         return this._rtm.sendMessage(response, message.channel);
-                    })
+                    });
     
                 } catch(err) {
                     this._log.error(err);

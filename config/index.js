@@ -16,6 +16,7 @@ const log = {
 module.exports = {
     witToken: process.env.WIT_TOKEN,
     slackToken: process.env.SLACK_TOKEN,
+    irisApiToken: process.env.IRIS_API_TOKEN,
     slackLogLevel: 'verbose',
     serviceTimeout: 30,
     log: (env) => {
